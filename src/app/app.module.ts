@@ -1,4 +1,4 @@
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpClient, HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
@@ -12,6 +12,7 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { CommonModule } from '@angular/common';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastrModule, ToastContainerModule } from 'ngx-toastr';
+import { TokenInterceptor } from './interceptors/token.interceptor';
 
 
 @NgModule({
@@ -29,7 +30,7 @@ import { ToastrModule, ToastContainerModule } from 'ngx-toastr';
     CommonModule,
     BrowserAnimationsModule, // required animations module
     ToastrModule.forRoot({
-      positionClass: 'toast-top-left',
+      positionClass: 'toast-top-right',
       //positionClass: 'inline toast-top-full-width',
       preventDuplicates: true,
       closeButton: true,
@@ -38,7 +39,11 @@ import { ToastrModule, ToastContainerModule } from 'ngx-toastr';
     }), // ToastrModule added
     ToastContainerModule,
   ],
-  providers: [],
+  providers: [{
+    provide:HTTP_INTERCEPTORS,
+    useClass:TokenInterceptor,
+    multi:true
+  }],
   bootstrap: [AppComponent],
 })
 export class AppModule { }

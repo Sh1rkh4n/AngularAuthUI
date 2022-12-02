@@ -4,6 +4,7 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import ValidateForm from 'src/app/helpers/validateform';
 import { Router } from '@angular/router';
 import { NotificationService } from 'src/app/services/notification.service';
+import { UserStoreService } from 'src/app/services/user-store.service';
 
 
 @Component({
@@ -22,7 +23,8 @@ export class LoginComponent implements OnInit {
     private fb: FormBuilder, 
     private auth: AuthService, 
     private router: Router,
-    private notifyService: NotificationService
+    private notifyService: NotificationService,
+    private userstore: UserStoreService
     ) { }
 
   ngOnInit(): void {
@@ -47,6 +49,10 @@ export class LoginComponent implements OnInit {
           // alert(res.message);
           this.notifyService.showSuccess(res.message);
           this.loginForm.reset();
+          this.auth.storeToken(res.token);
+          const tokenPayload = this.auth.decodeToken();
+          this.userstore.setFullNameForStore(tokenPayload.name);
+          this.userstore.setRolesForStore(tokenPayload.role);
           this.router.navigate(['dashboard']);
         },
         error:(err)=>{
