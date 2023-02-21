@@ -11,8 +11,9 @@ import { UserStoreService } from 'src/app/services/user-store.service';
 export class DashboardComponent implements OnInit {
 
   public users : any = [];
-
+  public role : string = "";
   public fullName : string = ""; 
+
   constructor(private api : ApiService, private auth : AuthService, private userStore : UserStoreService) { }
 
   ngOnInit(): void {
@@ -23,8 +24,14 @@ export class DashboardComponent implements OnInit {
 
     this.userStore.getFullNameFromStore()
       .subscribe(val=>{   //value
-        let fullNameFromToken = this.auth.getFullNameFromToken();
+        const fullNameFromToken = this.auth.getFullNameFromToken();
         this.fullName = val || fullNameFromToken
+      })
+
+    this.userStore.getRolesFromStore()
+      .subscribe(val=>{   //value
+        const roleFromToken = this.auth.getRoleFromToken();
+        this.role = val || roleFromToken
       })
   }
 
